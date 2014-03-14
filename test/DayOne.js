@@ -67,6 +67,51 @@ describe('DayOne', function() {
     });
   });
 
+  describe('#listSync', function() {
+
+    it('should list all available entries', function(done) {
+      var day1 = new DayOne(mockConfig);
+
+      var entries = day1.listSync();
+      assert.equal(entries.length, 3, 'Three entries');
+
+      done();
+    });
+
+    it('should list all entries matching the tags', function(done) {
+      var day1 = new DayOne(mockConfig);
+
+      var entries = day1.listSync({ tags: ['test'] });
+      assert.equal(entries.length, 1, 'One entry');
+      assert.equal(entries[0].tags.indexOf('test'), 0, 'Needs to include tag test');
+      assert.equal(entries[0].text, 'TaggedEntry', 'Only the tagged entry');
+
+      done();
+    });
+
+    it('should list all entries matching the starred option', function(done) {
+      var day1 = new DayOne(mockConfig);
+
+      var entries = day1.listSync({ starred: false });
+      assert.equal(entries.length, 2, 'Two entries');
+      assert.equal(entries[0].starred, false, 'Matches the starred option');
+
+      done();
+    });
+
+    it('should list all entries matching the starred option and the tags', function(done) {
+      var day1 = new DayOne(mockConfig);
+
+      var entries = day1.listSync({ starred: true, tags: ['othertag'] });
+      assert.equal(entries.length, 1, 'One entry');
+      assert.equal(entries[0].tags.indexOf('othertag'), 0, 'Needs to include tag othertag');
+      assert.equal(entries[0].starred, true, 'Matches the starred option');
+      assert.equal(entries[0].text, 'Tagged and starred entry', 'Matched the only tagged and starred entry');
+
+      done();
+    });
+  });
+
   describe('#save', function() {
 
     it('should save the entry', function(done) {
